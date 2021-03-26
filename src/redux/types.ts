@@ -18,16 +18,10 @@ export interface Action {
 
 // Reducer
 export interface Reducers {
-  home: HomeState;
-  persist: PersistState;
+  repos: ReposState;
 }
 
-export interface HomeState {
-  data: any[];
-  isLoadingGetSeason: boolean;
-  listSeasons: any[];
-}
-
-export interface PersistState {
-  language: string;
+export interface ReposState {
+  isLoading: boolean;
+  list: any[];
 }

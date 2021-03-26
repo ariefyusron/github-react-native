@@ -1,9 +1,7 @@
 import { combineReducers } from "redux";
 
-import persist from "./persist";
-import home from "./home";
+import repos from "./repos";
 
 export default combineReducers({
-  persist,
-  home,
+  repos,
 });

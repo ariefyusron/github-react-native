@@ -13,7 +13,7 @@ const host = axios.create({
 */
 
 const api = {
-  getSeasons: () => host.get("seasons"),
+  getRepos: (username: string) => host.get(`users/${username}/repos`),
 };
 
 export default api;

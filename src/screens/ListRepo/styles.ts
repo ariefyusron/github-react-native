@@ -1,38 +1,33 @@
 import { StyleSheet } from "react-native";
 
 import { COLORS } from "../../configs";
+import { scale } from "../../utils";
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
+  },
+  wrapLoading: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  wrapContent: {
     alignItems: "center",
   },
   content: {
-    width: "80%",
     backgroundColor: COLORS.background,
-    borderRadius: 10,
-    marginTop: 50,
+    borderRadius: scale(2),
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.2,
     elevation: 3,
+    padding: scale(5),
+    marginVertical: scale(2),
+    width: "90%",
   },
-  button: {
-    paddingVertical: 20,
-    width: "100%",
-    alignItems: "center",
-  },
-  border: {
-    borderBottomColor: COLORS.black02,
-    borderBottomWidth: 0.5,
-  },
-  text: {
-    fontSize: 16,
-  },
-  wrapIcon: {
-    position: "absolute",
-    right: 10,
-    top: 20,
+  title: {
+    fontWeight: "bold",
+    fontSize: 20,
   },
 });
 

@@ -1,60 +1,62 @@
-import React, { useCallback } from "react";
-import { Text, TouchableHighlight, View } from "react-native";
+import React, { useCallback, useEffect } from "react";
+import {
+  ActivityIndicator,
+  FlatList,
+  RefreshControl,
+  Text,
+  View,
+} from "react-native";
+import { useNavigation, useRoute } from "@react-navigation/native";
 import { useDispatch, useSelector } from "react-redux";
 
-import { COLORS } from "../../configs";
-import { Icon } from "../../components";
-import { chooseLanguage } from "../../redux/actions";
+import { getRepos } from "../../redux/actions";
 import { Reducers } from "../../redux/types";
+import { COLORS } from "../../configs";
 
 import styles from "./styles";
 
 const Component = () => {
+  const navigation = useNavigation();
   const dispatch = useDispatch();
+  const route = useRoute();
+  const { username } = route.params as any;
 
-  const persistState = useSelector((state: Reducers) => state.persist);
+  const reposState = useSelector((state: Reducers) => state.repos);
 
-  const _handleClick = useCallback(
-    (value: string) => {
-      dispatch(chooseLanguage(value));
-    },
-    [dispatch]
-  );
+  const _getData = useCallback(() => {
+    dispatch(getRepos(username, () => navigation.goBack()));
+  }, [dispatch, navigation, username]);
+
+  useEffect(() => {
+    _getData();
+  }, [_getData]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        <TouchableHighlight
-          style={[styles.button, styles.border]}
-          underlayColor={COLORS.underlay}
-          disabled={persistState.language === "en"}
-          onPress={() => _handleClick("en")}
-        >
-          <>
-            <Text style={styles.text}>English</Text>
-            {persistState.language === "en" ? (
-              <View style={styles.wrapIcon}>
-                <Icon name="check" size={20} />
+      {reposState.isLoading ? (
+        <View style={styles.wrapLoading}>
+          <ActivityIndicator color={COLORS.main} size="large" />
+        </View>
+      ) : (
+        <FlatList
+          data={reposState.list}
+          keyExtractor={(item, index) => String(index)}
+          refreshControl={
+            <RefreshControl
+              onRefresh={_getData}
+              refreshing={reposState.isLoading}
+            />
+          }
+          renderItem={({ item }) => (
+            <View style={styles.wrapContent}>
+              <View style={styles.content}>
+                <Text style={styles.title}>{item.name}</Text>
+                <Text>{item.description}</Text>
               </View>
-            ) : null}
-          </>
-        </TouchableHighlight>
-        <TouchableHighlight
-          style={styles.button}
-          underlayColor={COLORS.underlay}
-          disabled={persistState.language === "id"}
-          onPress={() => _handleClick("id")}
-        >
-          <>
-            <Text style={styles.text}>Bahasa Indonesia</Text>
-            {persistState.language === "id" && (
-              <View style={styles.wrapIcon}>
-                <Icon name="check" size={20} />
-              </View>
-            )}
-          </>
-        </TouchableHighlight>
-      </View>
+            </View>
+          )}
+        />
+      )}
     </View>
   );
 };
